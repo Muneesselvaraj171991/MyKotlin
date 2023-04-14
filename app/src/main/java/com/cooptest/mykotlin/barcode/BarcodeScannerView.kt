@@ -107,31 +107,41 @@ fun BarcodeScannerView(
         setupCameraPreview()
     }
 
-    val scaffoldState: ScaffoldState = rememberScaffoldState()
+    val scaffoldState = rememberScaffoldState()
 
+    val coroutineScope = rememberCoroutineScope()
 
-    Scaffold(scaffoldState = scaffoldState) {
+    LaunchedEffect(key1 = progressscan) {
 
-        LaunchedEffect(key1 = progressscan) {
-            if (progressscan) {
-                viewModel.scanCountIncrement()
-                val job = launch {
-                    scaffoldState.snackbarHostState.showSnackbar(
-                        "Hi",
-                        duration = SnackbarDuration.Indefinite
-                    )
+        coroutineScope.launch {
+            val result = scaffoldState.snackbarHostState.showSnackbar(
+                message = "Button clicked",
+                duration = SnackbarDuration.Short,
+                actionLabel = "Action"
+            )
+            when (result) {
+                SnackbarResult.ActionPerformed -> {
+                    Toast.makeText(context, "Snackbar action performed", Toast.LENGTH_SHORT)
+                        .show()
                 }
-                delay(500)
-                job.cancel()
-            }
-            try {
-                initTimer(2000) {
-                    viewModel.progressScan(false)
+                SnackbarResult.Dismissed -> {
+                    Toast.makeText(context, "Snackbar action performed", Toast.LENGTH_SHORT)
+                        .show()
                 }
-            } catch (e: Exception) {
             }
 
-        }
+
+    }
+//        if (progressscan) {
+//            viewModel.scanCountIncrement()
+//                   }
+//        try {
+//            initTimer(2000) {
+//                viewModel.progressScan(false)
+//            }
+//        } catch (e: Exception) {
+//        }
+
     }
 
 

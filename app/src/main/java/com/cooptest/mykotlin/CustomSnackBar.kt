@@ -1,5 +1,6 @@
 package com.cooptest.mykotlin
 
+import android.widget.Toast
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -26,6 +27,10 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun CustomSnackBar() {
+    val scaffoldState = rememberScaffoldState()
+    Scaffold(scaffoldState = scaffoldState) { contentPadding ->
+        ScaffoldSnackbar(scaffoldState,contentPadding)
+    }
 //    Column {
 //        val (snackbarVisibleState, setSnackBarState) = remember { mutableStateOf(false) }
 //
@@ -50,32 +55,56 @@ fun CustomSnackBar() {
 //    }
 
 
-    val context = LocalContext.current
-    var snackbarState = remember {
-        SnackbarHostState()
-    }
-var coroutineScope = rememberCoroutineScope()
-
-    Surface(
-        modifier = Modifier
-            .fillMaxSize(),
-
-                color = MaterialTheme.colors.primarySurface,
-        elevation = 8.dp
-    ) {
-        Button(onClick = {}) {
-
-        }
-        SnackbarHost(hostState = snackbarState){
-        customSnackbar(title =  "Munees", content = "munees", profileImageResource = R.drawable.search, onAction = {
-
-        })
-        }
-    }
+//    val context = LocalContext.current
+//    var snackbarState = remember {
+//        SnackbarHostState()
+//    }
+//var coroutineScope = rememberCoroutineScope()
+//
+//    Surface(
+//        modifier = Modifier
+//            .fillMaxSize(),
+//
+//                color = MaterialTheme.colors.primarySurface,
+//        elevation = 8.dp
+//    ) {
+//        Button(onClick = {}) {
+//
+//        }
+//        SnackbarHost(hostState = snackbarState){
+//        customSnackbar(title =  "Munees", content = "munees", profileImageResource = R.drawable.search, onAction = {
+//
+//        })
+//        }
+//    }
  
     
 }
+@Composable
+fun ScaffoldSnackbar(state: ScaffoldState, contentPadding: PaddingValues) {
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    Column() {
+            coroutineScope.launch {
+                val result = state.snackbarHostState.showSnackbar(
+                    message = "Button clicked",
+                    duration = SnackbarDuration.Short,
+                    actionLabel = "Action"
+                )
+                when (result) {
+                    SnackbarResult.ActionPerformed -> {
+                        Toast.makeText(context, "Snackbar action performed", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                    SnackbarResult.Dismissed -> {
+                        Toast.makeText(context, "Snackbar action performed", Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                }
+            }
 
+    }
+}
 @Composable
 fun customSnackbar(
     modifier: Modifier = Modifier,

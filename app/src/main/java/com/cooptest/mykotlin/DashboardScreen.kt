@@ -36,8 +36,8 @@ fun DashboardScreen() {
                     )
 
             ) {
-               HomeScreen()
-                //CustomSnackBar()
+              // HomeScreen()
+                CustomSnackBar()
             }
         }
         }
