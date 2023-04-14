@@ -11,26 +11,51 @@ import androidx.camera.core.ExperimentalGetImage
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.view.PreviewView
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.repeatable
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.Badge
+import androidx.compose.material.BadgedBox
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.SnackbarDuration
+import androidx.compose.material.SnackbarResult
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
+import androidx.compose.material.rememberScaffoldState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -46,13 +71,14 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.cooptest.mykotlin.*
+import com.cooptest.mykotlin.MainActivity
+import com.cooptest.mykotlin.MotionLayoutButton
 import com.cooptest.mykotlin.R
+import com.cooptest.mykotlin.getCameraXProvider
 import com.cooptest.mykotlin.ui.theme.black
 import com.cooptest.mykotlin.ui.theme.colorPrimary
 import com.cooptest.mykotlin.ui.theme.everGreen
 import com.cooptest.mykotlin.ui.theme.white
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @ExperimentalGetImage
@@ -63,6 +89,16 @@ fun BarcodeScannerView(
     viewModel : BarcodeScanViewModel, progressscan: Boolean
 
 ) {
+    val infiniteTransition = rememberInfiniteTransition()
+    val scale by infiniteTransition.animateFloat(
+        initialValue = 1f,
+        targetValue = 1.2f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1000),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val configuration = LocalConfiguration.current
@@ -70,7 +106,6 @@ fun BarcodeScannerView(
 
 
     val stringName: String? = viewModel.stringValue.observeAsState().value
-    val barcodeValue: String? = viewModel.barCodeValue.observeAsState().value
 
     val cameraPreview = Preview.Builder().build()
 
@@ -82,13 +117,7 @@ fun BarcodeScannerView(
 
     val previewWidget = remember { PreviewView(context) }
 
-    val animatedProgress = remember { Animatable(0.001f) }
-    LaunchedEffect(animatedProgress) {
-        animatedProgress.animateTo(1f,
-            animationSpec = repeatable(2,
-                animation = tween(durationMillis = 3000, easing = LinearEasing)
-            ))
-    }
+
 
     suspend fun setupCameraPreview() {
          val cameraProvider = context.getCameraXProvider()
@@ -165,7 +194,7 @@ fun BarcodeScannerView(
                 Canvas(
                     modifier = Modifier
                         .size(dimensionResource(id = R.dimen.fontsize_bar))
-//                        .scale(scale)
+                      .scale(scale)
                         .align(Alignment.Center)
                         .padding(dimensionResource(id = R.dimen.fontsize_16dp)),
 
@@ -222,7 +251,7 @@ fun BarcodeScannerView(
             }
         }
         stringName?.let { CustomScanTopBar(context,it) }
-        BackHandler() {
+        BackHandler {
             onBackPressed(context)
         }
     }
@@ -347,10 +376,6 @@ fun BottomBar(camera:Camera, viewModel: BarcodeScanViewModel, stringName: String
 }
 
 
-suspend fun initTimer(time: Long, onEnd: () -> Unit) {
-    delay(timeMillis = time)
-    onEnd()
-}
 private fun DrawScope.drawQrBorderCanvas(
     borderColor: Color = Color.White,
     curve: Dp,

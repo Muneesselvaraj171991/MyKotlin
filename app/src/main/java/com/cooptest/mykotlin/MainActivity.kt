@@ -14,10 +14,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            window?.setStatusBarColor(colorResource(id = R.color.ghost_white).toArgb())
+            window?.statusBarColor = colorResource(id = R.color.ghost_white).toArgb()
 
 
-            MyKotlinTheme() {
+            MyKotlinTheme {
 
                 DashboardScreen()
                 BackHandler {

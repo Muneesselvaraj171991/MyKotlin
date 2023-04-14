@@ -31,10 +31,6 @@ class BarcodeScanViewModel constructor(
     fun getBarcodeImageAnalyzer(): ImageAnalyzer {
         return barcodeImageAnalyzer
     }
-
-
-
-
     private fun setupImageAnalyzer() {
         barcodeImageAnalyzer.setProcessListener(
             listener = object : ImageAnalyzer.ProcessListenerAdapter() {
@@ -60,11 +56,8 @@ class BarcodeScanViewModel constructor(
         }
 
     }
-    fun scanCountIncrement(){
-        scancount.value = scancount.value?.plus(1)
 
-    }
-     fun progressScan(progressscan: Boolean) {
+    fun progressScan(progressscan: Boolean) {
         progressScan.postValue(progressscan)
     }
 }

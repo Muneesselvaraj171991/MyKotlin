@@ -2,6 +2,11 @@ package com.cooptest.mykotlin.barcode
 
 import android.Manifest
 import androidx.camera.core.ExperimentalGetImage
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -9,6 +14,7 @@ import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -48,23 +54,13 @@ fun BarcodeScannerScreen(
         }
         onScreenLoaded.invoke(status.isGranted)
     }
-//    LaunchedEffect(key1 = LocalLifecycleOwner.current) {
-//
-//        val infiniteTransition = rememberInfiniteTransition()
-//        val scale by infiniteTransition.animateFloat(
-//            initialValue = 1f,
-//            targetValue = 1.2f,
-//            animationSpec = infiniteRepeatable(
-//                animation = tween(1000),
-//                repeatMode = RepeatMode.Reverse
-//            )
-//        )
-//
-//    }
 
 
 
-    MyKotlinTheme() {
+
+
+
+    MyKotlinTheme {
 
         Scaffold(
             topBar = {

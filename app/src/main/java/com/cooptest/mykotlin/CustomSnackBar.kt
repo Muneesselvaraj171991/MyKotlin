@@ -84,7 +84,7 @@ fun CustomSnackBar() {
 fun ScaffoldSnackbar(state: ScaffoldState, contentPadding: PaddingValues) {
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
-    Column() {
+    Column {
             coroutineScope.launch {
                 val result = state.snackbarHostState.showSnackbar(
                     message = "Button clicked",
@@ -160,7 +160,7 @@ fun CustomSnackBar1(
 
 }
 class SnackbarState {
-   public var show by mutableStateOf(false)
+   var show by mutableStateOf(false)
 }
 
 

@@ -1,75 +1,64 @@
 package com.cooptest.mykotlin
-
-
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layoutId
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.IntOffset
-import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.*
+import androidx.constraintlayout.compose.ConstraintSet
+import androidx.constraintlayout.compose.ExperimentalMotionApi
+import androidx.constraintlayout.compose.MotionLayout
+import androidx.constraintlayout.compose.MotionLayoutDebugFlags
 import com.cooptest.mykotlin.barcode.BarcodeScanViewModel
 import com.cooptest.mykotlin.ui.theme.black
-import com.cooptest.mykotlin.ui.theme.colorPrimary
 import com.cooptest.mykotlin.ui.theme.white
-import java.util.*
-import kotlin.math.roundToInt
+import java.util.EnumSet
 
 
-
-
-@OptIn( ExperimentalMotionApi::class, ExperimentalMaterialApi::class)
+@OptIn( ExperimentalMotionApi::class)
 @Composable
-fun MotionLayoutButton(viewModel: BarcodeScanViewModel) {
-    Column(){
+fun  MotionLayoutButton(viewModel: BarcodeScanViewModel) {
+    Column {
+
+        var isScanButtonPressed  by remember { mutableStateOf(true)}
+
         val stringName: String? = viewModel.stringValue.observeAsState().value
 
-
-        ///var componentHeight by remember { mutableStateOf(1000) }
-
-        val swipeableState = rememberSwipeableState(1)
-        val anchors = mapOf(0f to 0, 1f to 1)
-// on below line we are specifying animate button method.
         var animateButton by remember { mutableStateOf(false) }
-// on below line we are specifying button animation progress
+
         val buttonAnimationProgress by animateFloatAsState(
 
-// specifying target value on below line.
             targetValue = if (animateButton) 1f else 0f,
 
-// on below line we are specifying
-// animation specific duration's 1 sec
             animationSpec = tween(1000)
         )
 
 
-// on below line we are creating a motion layout.
         MotionLayout(
 
-// in motion layout we are specifying 2 constraint
-// set for two different positions of buttons.
-// in first constraint set we are specifying width,
-// height start, end and top position of buttons.
             ConstraintSet(
                 """ {
 
-guide : {
-type: 'vGuideline',
-percent: 0.40
-},
+
 guide1 : {
 type: 'vGuideline',
 percent: 0.4
@@ -77,16 +66,12 @@ percent: 0.4
 button1: {
 width: 'wrap',
 height: 'wrap',
-start: ['guide1', 'start'],
-//end: ['button2', 'start', 10]
+start: ['guide1', 'end'],
 },
-// on below line we are specifying width,height
-// and margin from start, top and end for button2
 button2: {
 width: 'wrap',
 height: 'wrap',
 start: ['button1', 'end'],
-//end: ['guide', 'end', 30]
 }
 } """
             ),
@@ -98,17 +83,15 @@ start: ['button1', 'end'],
 // on below line we are specifying width,height and margin
 // from start, top and end for button1
 
-guide : {
-type: 'vGuideline',
-percent: 0.40
-},
+
 guide1 : {
 type: 'vGuideline',
-percent: 0.55
+percent: 0.64
 },
 button1: {
 width: 'wrap',
 height: 'wrap',
+
 //start: ['parent', 'start', 30],
 end: ['button2', 'start']
 },
@@ -117,7 +100,7 @@ end: ['button2', 'start']
 button2: {
 width: 'wrap',
 height: 'wrap',
-end: ['guide1', 'end'],
+start: ['guide1', 'start'],
 //end: ['guide1', 'end', 30]
 }
 } """
@@ -128,19 +111,8 @@ end: ['guide1', 'end'],
                 .fillMaxWidth()
                 .size(dimensionResource(id = R.dimen.motionlayout_size))
                 .background(black.copy(alpha = 0.6f))
-                .offset {
-                    IntOffset(swipeableState.offset.value.roundToInt(), 0)
-                }
-                .swipeable(
-                    state = swipeableState,
-                    anchors = anchors,
-                    reverseDirection = true,
-                    thresholds = { _, _ -> FractionalThreshold(0.3f) },
-                    orientation = Orientation.Horizontal
-                )
-                .onSizeChanged { size ->
-                    // componentHeight = size.height.toFloat()
-                }
+
+
         ) {
 
 
@@ -151,31 +123,46 @@ end: ['guide1', 'end'],
                 horizontalArrangement = Arrangement . Center
 
             ) {
-                val string : String = stringResource(id = R.string.handla_online)
+                val scan : String = stringResource(id = R.string.handla_online)
                 Image(
-                    painter = painterResource(id = R.drawable.bucket_selected),
+                    painter = painterResource(id = if (isScanButtonPressed) {
+                        if(viewModel.scancount.value != 0)  R.drawable.bucket_selected else R.drawable.sample;
+                    } else {
+                        R.drawable.bucket_item_un_selected
+                    }),
                     contentDescription = "",
+
                     modifier = Modifier
-                        .height(dimensionResource(id = R.dimen.bucket_size))
-                        .width(dimensionResource(id = R.dimen.bucket_size))
+
                         .clickable {
-                            viewModel.updateString(string)
-                            animateButton = !animateButton
+
+                            if(!isScanButtonPressed) {
+                                isScanButtonPressed = true
+                                viewModel.updateString(scan)
+                                animateButton = !animateButton
+                            }
                         }
 
 
                 )
-                val string1 : String = stringResource(id = R.string.coops_hållbarhetsdeklaration)
+                val search : String = stringResource(id = R.string.coops_hållbarhetsdeklaration)
 
                 Image(
-                    painter = painterResource(id = R.drawable.search_selected),
+                    painter = painterResource(id = if (!isScanButtonPressed) {
+                        R.drawable.search_selected
+                    } else {
+                        R.drawable.search_unselected
+                    }),
                     contentDescription = "",
                     modifier = Modifier
-                        .height(dimensionResource(id = R.dimen.bucket_size))
-                        .width(dimensionResource(id = R.dimen.bucket_size))
+
                         .clickable {
-                            viewModel.updateString(string1)
-                            animateButton = !animateButton
+                            if(isScanButtonPressed) {
+                                isScanButtonPressed = false
+
+                                viewModel.updateString(search)
+                                animateButton = !animateButton
+                            }
 
                         }
                 )

@@ -9,8 +9,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import com.cooptest.mykotlin.barcode.BarcodeScannerScreen
 import com.cooptest.mykotlin.barcode.BarcodeScanViewModel
+import com.cooptest.mykotlin.barcode.BarcodeScannerScreen
 
 @ExperimentalGetImage
 class BarcodeActivity : ComponentActivity() {
@@ -35,14 +35,12 @@ class BarcodeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         setContent {
-            window?.setStatusBarColor(Color.Black.toArgb())
+            window?.statusBarColor = Color.Black.toArgb()
 
 
             BarcodeScannerScreen(viewModel = viewModel)
         }
     }
-
-
 
 
 }
