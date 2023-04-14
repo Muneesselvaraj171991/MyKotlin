@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">CoopTest</string>
+    <string name="handla">Handla</string>
+    <string name="search_icon">Search</string>
+    <string name="barcode_icon">Barcode</string>
+    <string name= "popular_items">Populära föremål</string>
+    <string name="view_all">visa alla</string>
+    <string name="item_Image">ItemImage</string>
+    <string name="icon_AddImage">add_Icon</string>
+    <string name="handla_online">Handla Online</string>
+    <string name="canel">cancel</string>
+    <string name="till_varuga">Till varukorg</string>
+    <string name="flash_light">flash_light</string>
+    <string name="arrowIcon">arrowIcon</string>
+    <string name="rikta_text">Rikta kameran\nmot en streckkod\noch börja scanna</string>
+    <string name="coops_hållbarhetsdeklaration">coops hållbarhetsdeklaration</string>
+    <string name="camera_Permission_denied">Camera permission is denied</string>
+
+</resources>
