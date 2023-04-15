@@ -397,18 +397,7 @@ private fun DrawScope.drawQrBorderCanvas(
     val sweepAngle = 90 / 1- gapAngle / 2f
 
     strokeWidth.toPx().toInt()
-    for (i in 4..shadowSize.toPx().toInt() step 2) {
-        drawRoundRect(
-            color = Color(0x0000000),
-            size = size,
-            topLeft = Offset(0f, 0f),
-            style = Stroke(width = i * 1f),
-            cornerRadius = CornerRadius(
-                x = curvePx,
-                y = curvePx
-            ),
-        )
-    }
+    
 
     val mCurve = curvePx * 2
 
@@ -508,45 +497,6 @@ private fun DrawScope.drawQrBorderCanvas(
     )
 
 
-    drawLine(
-        SolidColor(borderColor), Offset(width, height - mCapSize), Offset(width, height - curvePx),
-        strokeWidth.toPx(), lineCap,
-    )
-
-    drawLine(
-        SolidColor(borderColor), Offset(width - mCapSize, height), Offset(width - curvePx, height),
-        strokeWidth.toPx(), lineCap,
-    )
-
-    drawLine(
-        SolidColor(borderColor), Offset(mCapSize, height), Offset(curvePx, height),
-        strokeWidth.toPx(), lineCap,
-    )
-
-    drawLine(
-        SolidColor(borderColor), Offset(0f, height - curvePx), Offset(0f, height - mCapSize),
-        strokeWidth.toPx(), lineCap
-    )
-
-    drawLine(
-        SolidColor(borderColor), Offset(0f, curvePx), Offset(0f, mCapSize),
-        strokeWidth.toPx(), lineCap,
-    )
-
-    drawLine(
-        SolidColor(borderColor), Offset(curvePx, 0f), Offset(mCapSize, 0f),
-        strokeWidth.toPx(), lineCap,
-    )
-
-    drawLine(
-        SolidColor(borderColor), Offset(width - curvePx, 0f), Offset(width - mCapSize, 0f),
-        strokeWidth.toPx(), lineCap,
-    )
-
-    drawLine(
-        SolidColor(borderColor), Offset(width, curvePx), Offset(width, mCapSize),
-        strokeWidth.toPx(), lineCap
-    )
-
+    
 }
 
